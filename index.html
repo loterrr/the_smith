@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Smiths — Interactive Flipbook</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bangers&family=Gloria+Hallelujah&family=Permanent+Marker&family=Caveat:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <button class="music-btn muted" id="music-btn">🔇</button>
+    <div class="page-counter" id="page-counter">1 / 4</div>
+    <button class="nav-btn prev-btn" id="prev-btn" style="display:none">‹</button>
+    <button class="nav-btn next-btn" id="next-btn">›</button>
+
+    <div class="book-wrap">
+
+        <!-- Page 1: Cover -->
+        <div class="leaf" id="leaf1">
+            <div class="leaf-face front-face">
+                <div class="cover-scene">
+                    <div class="vinyl-ring" id="vinyl-record">
+                        <div class="vinyl-groove g1"></div>
+                        <div class="vinyl-groove g2"></div>
+                        <div class="vinyl-groove g3"></div>
+                        <div class="vinyl-label">
+                            <div class="vinyl-hole"></div>
+                        </div>
+                    </div>
+                    <div class="ransom-block">
+                        <span class="rlet" style="--r:-5deg">t</span><span class="rlet"
+                            style="--r:4deg;--bg:#e0d5c5">h</span><span class="rlet"
+                            style="--r:-2deg;--bg:#ddd">e</span><br>
+                        <span class="rlet big" style="--r:3deg;--bg:#f5ead8">S</span><span class="rlet big"
+                            style="--r:-4deg">m</span><span class="rlet big" style="--r:2deg;--bg:#e8ddd0">i</span><span
+                            class="rlet big" style="--r:-3deg;--bg:#ddd">t</span><span class="rlet big"
+                            style="--r:5deg;--bg:#f0e6d3">h</span><span class="rlet big" style="--r:-1deg">s</span>
+                    </div>
+                    <div class="song-title">There's A Light<br>That Never Goes Out</div>
+                    <div class="player-bar">
+                        <span class="pt">1:01</span>
+                        <div class="ptrack">
+                            <div class="pfill"></div>
+                            <div class="pdot"></div>
+                        </div>
+                        <span class="pt">-3:02</span>
+                    </div>
+                    <div class="tap-hint">drag right edge to turn page →</div>
+                </div>
+            </div>
+            <div class="leaf-face back-face"></div>
+        </div>
+
+        <!-- Page 2: Bus Scene -->
+        <div class="leaf" id="leaf2">
+            <div class="leaf-face front-face">
+                <div class="bus-scene">
+                    <div class="bus-top">
+                        <div class="red-box">And if a double<br>decker <strong>BUS</strong>...</div>
+                        <div class="crash-wrap">
+                            <div class="crash-bubble"><span>CRASHES</span><br><span>BOOM!</span></div>
+                        </div>
+                    </div>
+                    <div class="road-zone">
+                        <div class="bus-emoji" id="bus-emoji">🚌</div>
+                        <div class="road-surface">
+                            <div class="road-dashes"></div>
+                        </div>
+                        <div class="traffic-light">
+                            <div class="tl-head">
+                                <div class="tl-dot red"></div>
+                                <div class="tl-dot amber"></div>
+                                <div class="tl-dot grn"></div>
+                            </div>
+                            <div class="tl-pole"></div>
+                        </div>
+                    </div>
+                    <div class="bus-bottom">
+                        <div class="into-us">iNto us &nbsp; 🐱🐱</div>
+                        <div class="pull-hint">← drag tab →</div>
+                        <div class="tab-track" id="bus-track">
+                            <div class="pull-tab" id="bus-tab"><span class="tab-icon">⟶</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="leaf-face back-face"></div>
+        </div>
+
+        <!-- Page 3: Cemetery -->
+        <div class="leaf" id="leaf3">
+            <div class="leaf-face front-face">
+                <div class="cemetery-scene">
+                    <div class="grave-col">
+                        <div class="sky-strip">
+                            <div class="to-die-label">TO DIE</div>
+                        </div>
+                        <div class="grass-strip">
+                            <div class="stone">
+                                <div class="cross">✝</div>
+                                <div class="stone-name">me</div>
+                            </div>
+                            <div class="stone">
+                                <div class="cross">✝</div>
+                                <div class="stone-name">you</div>
+                            </div>
+                        </div>
+                        <div class="dirt-strip">
+                            <div class="by-side">By Your side</div>
+                            <div class="rising-cats" id="rising-cats">🐱🐱</div>
+                        </div>
+                    </div>
+                    <div class="heaven-col">
+                        <div class="heaven-text">IS SUCH A<br><em class="h-word">heavenly</em><br>Way to DIE</div>
+                        <div class="halo-icon">☀</div>
+                        <div class="wing-icon">𓆩♡𓆪</div>
+                        <div class="cat-tab-area">
+                            <div class="pull-hint-v">↑ pull ↑</div>
+                            <div class="tab-track-v" id="cat-track">
+                                <div class="pull-tab-v" id="cat-tab"><span class="tab-icon">↑</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="leaf-face back-face"></div>
+        </div>
+
+        <!-- Page 4: Back Cover -->
+        <div class="leaf" id="leaf4">
+            <div class="leaf-face front-face">
+                <div class="back-scene">
+                    <div class="vinyl-ring small-vinyl">
+                        <div class="vinyl-label">
+                            <div class="vinyl-hole"></div>
+                        </div>
+                    </div>
+                    <div class="ransom-block end-block">
+                        <span class="rlet" style="--r:-3deg">t</span><span class="rlet"
+                            style="--r:4deg;--bg:#e0d5c5">h</span><span class="rlet"
+                            style="--r:-1deg;--bg:#ddd">e</span><br>
+                        <span class="rlet big" style="--r:2deg;--bg:#f5ead8">E</span><span class="rlet big"
+                            style="--r:-4deg">N</span><span class="rlet big" style="--r:3deg;--bg:#e8ddd0">D</span>
+                    </div>
+                    <div class="spotify-block">
+                        <div class="scan-code">
+                            <div class="sb h3"></div>
+                            <div class="sb h1"></div>
+                            <div class="sg"></div>
+                            <div class="sb h2"></div>
+                            <div class="sb h3"></div>
+                            <div class="sb h1"></div>
+                            <div class="sg"></div>
+                            <div class="sb h2"></div>
+                            <div class="sb h1"></div>
+                            <div class="sg"></div>
+                            <div class="sg"></div>
+                            <div class="sb h3"></div>
+                            <div class="sb h2"></div>
+                            <div class="sb h1"></div>
+                        </div>
+                        <svg class="spotify-icon" viewBox="0 0 24 24" fill="#1DB954">
+                            <path
+                                d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                        </svg>
+                    </div>
+                    <button class="restart-btn" id="restart-btn">↩ start over</button>
+                </div>
+            </div>
+            <div class="leaf-face back-face"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

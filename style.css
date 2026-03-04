@@ -1,0 +1,901 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Gloria+Hallelujah&family=Permanent+Marker&family=Caveat:wght@700&display=swap');
+
+/* ── ROOT ── */
+:root {
+    --w: 310px;
+    --h: 440px;
+    --paper: #faf7f2;
+    --paper2: #f0ebe3;
+    --red: #d63031;
+    --yellow: #fdcb6e;
+    --marker: 'Permanent Marker', cursive;
+    --hand: 'Gloria Hallelujah', cursive;
+    --comic: 'Bangers', cursive;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(145deg, #3d2b1f, #5c3d2e 40%, #4a2c2a 70%, #2c1810);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--hand);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Wood grain */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        repeating-linear-gradient(90deg, transparent 0 48px, rgba(255, 255, 255, 0.015) 48px 50px),
+        repeating-linear-gradient(0deg, transparent 0 98px, rgba(0, 0, 0, 0.04) 98px 100px);
+    pointer-events: none;
+}
+
+/* Warm light */
+body::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 200, 120, 0.13) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+/* ── MUSIC BUTTON ── */
+.music-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 19px;
+    cursor: pointer;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.3);
+}
+
+.music-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.music-btn.muted {
+    opacity: 0.5;
+}
+
+/* ── PAGE COUNTER ── */
+.page-counter {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.55);
+    font-family: var(--hand);
+    font-size: 0.75rem;
+    z-index: 999;
+    letter-spacing: 2px;
+}
+
+/* ── NAV ARROWS ── */
+.nav-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 26px;
+    cursor: pointer;
+    z-index: 999;
+    transition: all .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.3);
+    line-height: 1;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.prev-btn {
+    left: 16px;
+}
+
+.next-btn {
+    right: 20px;
+}
+
+/* ── BOOK WRAP & 3D SETUP ── */
+.book-wrap {
+    width: var(--w);
+    height: var(--h);
+    position: relative;
+    perspective: 1500px;
+}
+
+/* Spine accent line */
+.book-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(30, 20, 10, 0.4), transparent);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* ── LEAF (the actual paper sheet) ── */
+.leaf {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    cursor: grab;
+    /* initial state */
+    transform: rotateY(0deg);
+}
+
+.leaf:active {
+    cursor: grabbing;
+}
+
+/* ── LEAF FACES (front and back of the paper) ── */
+.leaf-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--paper);
+    border-radius: 2px 5px 5px 2px;
+    border: 1px solid #c8b9a2;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 27px,
+            rgba(170, 158, 140, 0.12) 27px, rgba(170, 158, 140, 0.12) 28px);
+    overflow: hidden;
+    box-shadow:
+        inset -4px 0 10px rgba(0, 0, 0, 0.04),
+        2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* The front face holds the content */
+.front-face {
+    transform: rotateY(0deg);
+}
+
+/* The back face is empty but styled to look like the reverse of the page */
+.back-face {
+    transform: rotateY(180deg);
+    background: var(--paper);
+    /* slight shading to look like the back */
+    box-shadow: inset 4px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ══════════════════════════════
+   SCENE 1: COVER
+══════════════════════════════ */
+.cover-scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 24px 20px;
+    gap: 0;
+}
+
+/* Vinyl Record */
+.vinyl-ring {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg,
+            #111 0deg, #1e1e1e 15deg, #111 30deg, #1a1a1a 45deg,
+            #222 60deg, #111 90deg, #1e1e1e 120deg, #111 150deg,
+            #222 180deg, #111 210deg, #1e1e1e 240deg, #111 270deg,
+            #222 300deg, #111 330deg, #1e1e1e 360deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #0a0a0a;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.45);
+    cursor: grab;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.vinyl-ring:active {
+    cursor: grabbing;
+}
+
+.vinyl-groove {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    pointer-events: none;
+}
+
+.g1 {
+    width: 88%;
+    height: 88%;
+}
+
+.g2 {
+    width: 72%;
+    height: 72%;
+}
+
+.g3 {
+    width: 56%;
+    height: 56%;
+}
+
+.vinyl-label {
+    width: 38%;
+    height: 38%;
+    background: radial-gradient(circle at 40% 38%, #f05a3a, #c0392b);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.vinyl-hole {
+    width: 7px;
+    height: 7px;
+    background: #111;
+    border-radius: 50%;
+}
+
+/* Small vinyl for back cover */
+.small-vinyl {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 0;
+}
+
+/* Ransom Note Letters */
+.ransom-block {
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.6;
+}
+
+.rlet {
+    display: inline-block;
+    font-family: var(--marker);
+    font-size: 20px;
+    padding: 2px 7px;
+    margin: 1px;
+    border: 2px solid #333;
+    background: var(--bg, #f0e6d3);
+    transform: rotate(var(--r, 0deg));
+    line-height: 1.1;
+}
+
+.rlet.big {
+    font-size: 27px;
+    padding: 3px 8px;
+}
+
+.song-title {
+    font-family: var(--hand);
+    font-size: 1rem;
+    color: #444;
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+/* Player Bar */
+.player-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    font-family: var(--hand);
+    font-size: 0.72rem;
+    color: #999;
+    margin-bottom: 16px;
+}
+
+.pt {
+    white-space: nowrap;
+}
+
+.ptrack {
+    flex: 1;
+    height: 3px;
+    background: #e0d6c6;
+    margin: 0 8px;
+    position: relative;
+    border-radius: 2px;
+}
+
+.pfill {
+    height: 100%;
+    width: 38%;
+    background: #666;
+    border-radius: 2px;
+}
+
+.pdot {
+    width: 9px;
+    height: 9px;
+    background: #666;
+    border-radius: 50%;
+    position: absolute;
+    top: -3px;
+    left: 38%;
+}
+
+.tap-me {
+    font-family: var(--hand);
+    font-size: 0.75rem;
+    color: #bbb;
+    letter-spacing: 1px;
+    animation: tapPulse 2s ease-in-out infinite;
+}
+
+@keyframes tapPulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.9;
+    }
+}
+
+.tap-hint {
+    font-family: var(--hand);
+    font-size: 0.75rem;
+    color: #bbb;
+    letter-spacing: 1px;
+    animation: tapPulse 2s ease-in-out infinite;
+}
+
+/* ══════════════════════════════
+   SCENE 2: BUS CRASH
+══════════════════════════════ */
+.bus-scene {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.bus-top {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px 16px 0;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.red-box {
+    background: var(--red);
+    color: #fff;
+    padding: 12px 14px;
+    font-family: var(--hand);
+    font-size: 0.88rem;
+    line-height: 1.55;
+    flex-shrink: 0;
+    width: 55%;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.red-box strong {
+    font-family: var(--marker);
+}
+
+.crash-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 4px;
+}
+
+.crash-bubble {
+    background: var(--yellow);
+    border: 3px solid #333;
+    border-radius: 28px 28px 28px 6px;
+    padding: 8px 14px;
+    font-family: var(--comic);
+    font-size: 1.3rem;
+    color: #333;
+    letter-spacing: 1.5px;
+    line-height: 1.2;
+    text-align: center;
+    transform: rotate(4deg);
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18);
+    position: relative;
+}
+
+.crash-bubble::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border: 2px dashed rgba(80, 60, 0, 0.2);
+    border-radius: 32px 32px 32px 10px;
+    pointer-events: none;
+}
+
+/* Road zone */
+.road-zone {
+    flex: 1;
+    position: relative;
+    margin: 12px 0 6px;
+}
+
+.bus-emoji {
+    position: absolute;
+    bottom: 30px;
+    left: 14px;
+    font-size: 44px;
+    z-index: 3;
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.2));
+}
+
+.road-surface {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 28px;
+    background: #636e72;
+    z-index: 2;
+}
+
+.road-dashes {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 3px dashed #ffeaa7;
+    transform: translateY(-50%);
+}
+
+/* Traffic light */
+.traffic-light {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tl-head {
+    background: #2d3436;
+    border-radius: 8px;
+    padding: 5px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #1a1a1a;
+}
+
+.tl-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+.tl-dot.red {
+    background: #e74c3c;
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.6);
+}
+
+.tl-dot.amber {
+    background: #f39c12;
+}
+
+.tl-dot.grn {
+    background: #27ae60;
+}
+
+.tl-pole {
+    width: 4px;
+    height: 22px;
+    background: #636e72;
+}
+
+/* Bus bottom */
+.bus-bottom {
+    padding: 8px 16px 14px;
+    background: var(--paper2);
+    border-top: 1px solid #e0d6c6;
+    flex-shrink: 0;
+}
+
+.into-us {
+    font-family: var(--hand);
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.pull-hint {
+    font-family: var(--hand);
+    font-size: 0.65rem;
+    color: #bbb;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+/* Pull tab track */
+.tab-track {
+    width: 100%;
+    height: 48px;
+    background: #e8e0d4;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    position: relative;
+    overflow: hidden;
+}
+
+.pull-tab {
+    width: 54px;
+    height: 100%;
+    background: #fff;
+    border-radius: 8px;
+    border: 2px solid #bbb;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    user-select: none;
+    -webkit-user-select: none;
+    transition: box-shadow 0.2s;
+    z-index: 5;
+}
+
+.pull-tab:active {
+    cursor: grabbing;
+    box-shadow: 1px 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.tab-icon {
+    font-size: 18px;
+    color: #999;
+    font-family: monospace;
+}
+
+/* ══════════════════════════════
+   SCENE 3: CEMETERY
+══════════════════════════════ */
+.cemetery-scene {
+    display: flex;
+    height: 100%;
+}
+
+.grave-col {
+    width: 55%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sky-strip {
+    height: 24%;
+    background: linear-gradient(180deg, #b2e0f7 0%, #dfe6e9 100%);
+    padding: 12px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.to-die-label {
+    font-family: var(--marker);
+    font-size: 1rem;
+    color: #333;
+    background: #f0e6d3;
+    display: inline-block;
+    padding: 2px 8px;
+    border: 2px solid #333;
+    transform: rotate(-3deg);
+}
+
+.grass-strip {
+    height: 38%;
+    background: linear-gradient(180deg, #55a876 0%, #27ae60 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 12px;
+    padding-bottom: 0;
+    position: relative;
+    overflow: visible;
+}
+
+.stone {
+    width: 50px;
+    height: 70px;
+    background: linear-gradient(180deg, #cfd8dc, #b0bec5);
+    border-radius: 22px 22px 0 0;
+    text-align: center;
+    padding-top: 8px;
+    position: relative;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.12);
+    z-index: 2;
+}
+
+.cross {
+    font-size: 10px;
+    color: #777;
+}
+
+.stone-name {
+    font-family: var(--hand);
+    font-size: 0.8rem;
+    color: #555;
+}
+
+.dirt-strip {
+    flex: 1;
+    background: linear-gradient(180deg, #8d6e63, #6d4c41 50%, #5d4037);
+    position: relative;
+    overflow: hidden;
+    padding: 10px 10px 8px;
+}
+
+.by-side {
+    font-family: var(--hand);
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.75);
+    position: relative;
+    z-index: 2;
+}
+
+/* Rising cats */
+.rising-cats {
+    position: absolute;
+    left: 50%;
+    bottom: -50px;
+    transform: translateX(-50%);
+    font-size: 34px;
+    z-index: 3;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: bottom 0.1s ease-out;
+    white-space: nowrap;
+}
+
+/* Heaven column */
+.heaven-col {
+    flex: 1;
+    height: 100%;
+    background: linear-gradient(180deg, #faf7f2 0%, #ece5da 100%);
+    border-left: 1px solid #e0d6c6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 12px;
+    gap: 8px;
+    position: relative;
+}
+
+.heaven-text {
+    font-family: var(--marker);
+    font-size: 0.92rem;
+    color: #333;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.h-word {
+    font-family: var(--hand);
+    font-size: 1.2rem;
+    color: #2980b9;
+    font-style: italic;
+}
+
+.halo-icon {
+    font-size: 30px;
+    color: #f1c40f;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.4);
+}
+
+.wing-icon {
+    font-size: 17px;
+    color: #74b9ff;
+    letter-spacing: 5px;
+}
+
+/* Cat pull tab (vertical) */
+.cat-tab-area {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 80%;
+}
+
+.pull-hint-v {
+    font-family: var(--hand);
+    font-size: 0.62rem;
+    color: #bbb;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+.tab-track-v {
+    height: 90px;
+    width: 100%;
+    background: #e8e0d4;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    position: relative;
+    overflow: visible;
+}
+
+.pull-tab-v {
+    width: 100%;
+    height: 36px;
+    background: #fff;
+    border-radius: 8px;
+    border: 2px solid #bbb;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.12);
+    user-select: none;
+    -webkit-user-select: none;
+    z-index: 5;
+}
+
+.pull-tab-v:active {
+    cursor: grabbing;
+}
+
+/* ══════════════════════════════
+   SCENE 4: BACK COVER
+══════════════════════════════ */
+.back-scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 24px;
+    gap: 18px;
+    background: linear-gradient(180deg, var(--paper) 0%, var(--paper2) 100%);
+}
+
+.back-vinyl {
+    display: flex;
+    justify-content: center;
+}
+
+.end-block {
+    margin-bottom: 0;
+}
+
+.spotify-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.scan-code {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 28px;
+}
+
+.sb {
+    width: 3px;
+    background: #333;
+    border-radius: 1px;
+}
+
+.sb.h1 {
+    height: 22px;
+}
+
+.sb.h2 {
+    height: 14px;
+}
+
+.sb.h3 {
+    height: 8px;
+}
+
+.sg {
+    width: 5px;
+}
+
+.spotify-icon {
+    width: 22px;
+    height: 22px;
+}
+
+.restart-btn {
+    background: transparent;
+    border: 1px solid #bbb;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: var(--hand);
+    font-size: 0.72rem;
+    color: #888;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: all 0.2s;
+}
+
+.restart-btn:hover {
+    background: #eee;
+    color: #333;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 380px) {
+    :root {
+        --w: 280px;
+        --h: 400px;
+    }
+
+    .rlet.big {
+        font-size: 23px;
+    }
+
+    .crash-bubble {
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-width: 700px) {
+    :root {
+        --w: 340px;
+        --h: 480px;
+    }
+}
