@@ -157,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             current++;
             updateUI();
+            handleResize(); // Center for 2-page spread
             isAnimating = false;
         }, 500);
     }
@@ -184,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             current--;
             updateUI();
+            handleResize(); // Center for 1-page cover
             isAnimating = false;
         }, 500);
     }
@@ -194,7 +196,31 @@ document.addEventListener('DOMContentLoaded', () => {
         isAnimating = false;
         current = 0;
         initStack();
+        handleResize();
     });
+    // ══════════════════════════════════
+    // RESPONSIVE SCALING
+    // ══════════════════════════════════
+    const scaler = document.getElementById('book-scaler');
+    const bookWidth = 310;
+    const bookHeight = 440;
+
+    function handleResize() {
+        if (!scaler) return;
+        // Scale based on "2-page spread" width if current > 0, otherwise single page
+        const requiredWidth = (current > 0) ? bookWidth * 2.2 : bookWidth * 1.2;
+        const requiredHeight = bookHeight * 1.2;
+
+        const scaleX = window.innerWidth / requiredWidth;
+        const scaleY = window.innerHeight / requiredHeight;
+        const scale = Math.min(scaleX, scaleY, 1.0); // Don't scale up past 100%
+
+        scaler.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', handleResize);
+    // Initial call after some setup
+    setTimeout(handleResize, 100);
 
     initStack();
 
@@ -361,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let continuousAngle = vAngle;
 
             const mv = (ev) => {
-                if (!isDragging || !audioBuffer) return;
+                if (!isDragging) return;
 
                 const currentA = angle(ev);
                 const currentT = performance.now();
@@ -377,32 +403,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 vAngle = ((continuousAngle % 360) + 360) % 360;
                 vinyl.style.transform = `rotate(${vAngle}deg)`;
 
-                // Calculate scratch speed
-                // Normal speed mapping: AUTO_SPIN_SPEED per 28ms is 1.0x speed
-                // So expected speed (deg/ms) = 1.4 / 28 = 0.05
-                const dragSpeedDegPerMs = dA / dt;
-                const baseSpeed = AUTO_SPIN_SPEED / 28;
+                if (audioBuffer) {
+                    // Calculate scratch speed
+                    const dragSpeedDegPerMs = dA / dt;
+                    const baseSpeed = AUTO_SPIN_SPEED / 28;
+                    const SCRATCH_SENSITIVITY = 0.3;
 
-                // Add a sensitivity multiplier to make the scratch feel heavier/slower
-                const SCRATCH_SENSITIVITY = 0.3; // Lower means slower scrubbing
+                    let scratchRate = (dragSpeedDegPerMs / baseSpeed) * SCRATCH_SENSITIVITY;
 
-                let scratchRate = (dragSpeedDegPerMs / baseSpeed) * SCRATCH_SENSITIVITY;
+                    const timePerDegree = (28 / 1000) / AUTO_SPIN_SPEED;
+                    const timeDelta = dA * timePerDegree * SCRATCH_SENSITIVITY;
 
-                // We advance playhead manually based on angle change, because
-                // short audio chunks get choppy. Easier to just read the scrub angle:
-                // 360 degrees = ~7.2 seconds (if 50deg/sec).
-                // Let's establish exactly how many seconds 1 degree represents:
-                const timePerDegree = (28 / 1000) / AUTO_SPIN_SPEED;
-                const timeDelta = dA * timePerDegree * SCRATCH_SENSITIVITY;
+                    playheadTime += timeDelta;
 
-                playheadTime += timeDelta;
+                    if (playheadTime < 0) playheadTime = audioBuffer.duration - (-playheadTime % audioBuffer.duration);
+                    playheadTime = playheadTime % audioBuffer.duration;
 
-                // Wrap safely
-                if (playheadTime < 0) playheadTime = audioBuffer.duration - (-playheadTime % audioBuffer.duration);
-                playheadTime = playheadTime % audioBuffer.duration;
-
-                // Play a tiny snippet of audio to simulate the scratch
-                playScratchGrain(scratchRate);
+                    playScratchGrain(scratchRate);
+                }
 
                 lastA = currentA;
                 lastT = currentT;
@@ -456,8 +474,8 @@ document.addEventListener('DOMContentLoaded', () => {
         function angle(e) {
             const r = vinyl.getBoundingClientRect();
             const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-            const px = e.touches ? e.touches[0].clientX : e.clientX;
-            const py = e.touches ? e.touches[0].clientY : e.clientY;
+            const px = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+            const py = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
             return Math.atan2(py - cy, px - cx) * (180 / Math.PI);
         }
     }
@@ -525,10 +543,149 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ══════════════════════════════════
+    // PULL TAB: STEER CAR (horizontal back and forth)
+    // ══════════════════════════════════
+    const steerTab = document.getElementById('steer-tab');
+    const steerTrack = document.getElementById('steer-track');
+    const driveCar = document.getElementById('drive-car');
+    if (steerTab && steerTrack && driveCar) {
+        let steerDragging = false, steerStartX = 0, steerCurX = 0;
+        
+        // start tab in the middle
+        const maxSteer = steerTrack.clientWidth - steerTab.clientWidth;
+        steerCurX = maxSteer / 2;
+        steerTab.style.transform = `translateX(${steerCurX}px)`;
+
+        steerTab.addEventListener('mousedown', startSteerDrag);
+        steerTab.addEventListener('touchstart', startSteerDrag, { passive: false });
+        function startSteerDrag(e) {
+            e.stopPropagation(); e.preventDefault();
+            steerDragging = true;
+            steerStartX = getClientX(e) - steerCurX;
+            const mv = (ev) => {
+                if (!steerDragging) return;
+                steerCurX = Math.min(maxSteer, Math.max(0, getClientX(ev) - steerStartX));
+                steerTab.style.transform = `translateX(${steerCurX}px)`;
+                // Map steering tab (0 to max) to car visual translation (-80px to +80px)
+                const pct = (steerCurX / maxSteer) - 0.5;
+                driveCar.style.transform = `translateX(calc(-50% + ${pct * 160}px)) rotate(${pct * 15}deg)`;
+            };
+            const up = () => { steerDragging = false; cleanup(mv, up); };
+            document.addEventListener('mousemove', mv);
+            document.addEventListener('touchmove', mv, { passive: false });
+            document.addEventListener('mouseup', up);
+            document.addEventListener('touchend', up);
+        }
+    }
+
+
+    // ══════════════════════════════════
+    // PULL TAB: TRUCK (horizontal reversed)
+    // ══════════════════════════════════
+    const truckTab = document.getElementById('truck-tab');
+    const truckTrack = document.getElementById('truck-track');
+    const truckEmoji = document.getElementById('truck-emoji');
+    const truckCrash = document.getElementById('truck-crash');
+    if (truckTab && truckTrack && truckEmoji) {
+        let truckDragging = false, truckStartX = 0, truckCurX = 0;
+        truckTab.addEventListener('mousedown', startTruckDrag);
+        truckTab.addEventListener('touchstart', startTruckDrag, { passive: false });
+        function startTruckDrag(e) {
+            e.stopPropagation(); e.preventDefault();
+            truckDragging = true;
+            truckStartX = getClientX(e) - truckCurX;
+            const mv = (ev) => {
+                if (!truckDragging) return;
+                const max = truckTrack.clientWidth - truckTab.clientWidth;
+                // Sliding from right (0) to left (-max)
+                truckCurX = Math.min(0, Math.max(-max, getClientX(ev) - truckStartX));
+                truckTab.style.transform = `translateX(${truckCurX}px)`;
+                
+                // Emoji goes right to left
+                truckEmoji.style.transform = `translateX(${truckCurX * (210/max)}px) scaleX(-1)`;
+
+                if (Math.abs(truckCurX) >= max * 0.9) {
+                    truckCrash.classList.add('show');
+                } else {
+                    truckCrash.classList.remove('show');
+                }
+            };
+            const up = () => { truckDragging = false; cleanup(mv, up); };
+            document.addEventListener('mousemove', mv);
+            document.addEventListener('touchmove', mv, { passive: false });
+            document.addEventListener('mouseup', up);
+            document.addEventListener('touchend', up);
+        }
+    }
+
+
+    // ══════════════════════════════════
+    // UNDERPASS FLASHLIGHT
+    // ══════════════════════════════════
+    const underpassScene = document.getElementById('underpass-scene');
+    const darkOverlay = document.getElementById('dark-overlay');
+    if (underpassScene && darkOverlay) {
+        function updateFlashlight(x, y) {
+            darkOverlay.style.clipPath = `circle(60px at ${x}px ${y}px)`;
+        }
+        
+        const attachFlash = (e) => {
+            const rect = underpassScene.getBoundingClientRect();
+            const cx = getClientX(e) - rect.left;
+            const cy = getClientY(e) - rect.top;
+            updateFlashlight(cx, cy);
+        };
+        
+        underpassScene.addEventListener('mousemove', attachFlash);
+        underpassScene.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // stop page scroll
+            attachFlash(e);
+        }, { passive: false });
+    }
+
+
+    // ══════════════════════════════════
+    // PULL CORD: THE LIGHT (vertical down)
+    // ══════════════════════════════════
+    const lightTab = document.getElementById('light-tab');
+    const lightTrack = document.getElementById('light-track');
+    const lightScene = document.getElementById('light-scene');
+    if (lightTab && lightTrack && lightScene) {
+        let lightDragging = false, lightStartY = 0, lightCurY = 0;
+        let isLit = false;
+
+        lightTab.addEventListener('mousedown', startLightDrag);
+        lightTab.addEventListener('touchstart', startLightDrag, { passive: false });
+        function startLightDrag(e) {
+            if(isLit) return; // one-time pull
+            e.stopPropagation(); e.preventDefault();
+            lightDragging = true;
+            lightStartY = getClientY(e) - lightCurY;
+            const mv = (ev) => {
+                if (!lightDragging) return;
+                const max = lightTrack.clientHeight - lightTab.clientHeight;
+                lightCurY = Math.min(max, Math.max(0, getClientY(ev) - lightStartY));
+                lightTab.style.transform = `translateY(${lightCurY}px)`;
+                
+                if (lightCurY >= max * 0.8 && !isLit) {
+                    isLit = true;
+                    lightScene.classList.add('illuminated');
+                }
+            };
+            const up = () => { lightDragging = false; cleanup(mv, up); };
+            document.addEventListener('mousemove', mv);
+            document.addEventListener('touchmove', mv, { passive: false });
+            document.addEventListener('mouseup', up);
+            document.addEventListener('touchend', up);
+        }
+    }
+
+
+    // ══════════════════════════════════
     // HELPERS
     // ══════════════════════════════════
-    function getClientX(e) { return e.touches ? e.touches[0].clientX : e.clientX; }
-    function getClientY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
+    function getClientX(e) { return (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX; }
+    function getClientY(e) { return (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY; }
     function cleanup(mv, up) {
         document.removeEventListener('mousemove', mv);
         document.removeEventListener('touchmove', mv);

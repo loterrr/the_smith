@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Gloria+Hallelujah&family=Permanent+Marker&family=Caveat:wght@700&display=swap');
 
-/* ── ROOT ── */
 :root {
     --w: 310px;
     --h: 440px;
@@ -30,7 +29,6 @@ body {
     position: relative;
 }
 
-/* Wood grain */
 body::before {
     content: '';
     position: fixed;
@@ -41,7 +39,6 @@ body::before {
     pointer-events: none;
 }
 
-/* Warm light */
 body::after {
     content: '';
     position: fixed;
@@ -54,7 +51,6 @@ body::after {
     pointer-events: none;
 }
 
-/* ── MUSIC BUTTON ── */
 .music-btn {
     position: fixed;
     bottom: 20px;
@@ -85,7 +81,6 @@ body::after {
     opacity: 0.5;
 }
 
-/* ── PAGE COUNTER ── */
 .page-counter {
     position: fixed;
     top: 20px;
@@ -98,7 +93,6 @@ body::after {
     letter-spacing: 2px;
 }
 
-/* ── NAV ARROWS ── */
 .nav-btn {
     position: fixed;
     top: 50%;
@@ -134,7 +128,6 @@ body::after {
     right: 20px;
 }
 
-/* ── BOOK WRAP & 3D SETUP ── */
 .book-wrap {
     width: var(--w);
     height: var(--h);
@@ -142,7 +135,6 @@ body::after {
     perspective: 1500px;
 }
 
-/* Spine accent line */
 .book-wrap::before {
     content: '';
     position: absolute;
@@ -155,7 +147,6 @@ body::after {
     pointer-events: none;
 }
 
-/* ── LEAF (the actual paper sheet) ── */
 .leaf {
     position: absolute;
     top: 0;
@@ -165,7 +156,6 @@ body::after {
     transform-origin: left center;
     transform-style: preserve-3d;
     cursor: grab;
-    /* initial state */
     transform: rotateY(0deg);
 }
 
@@ -173,7 +163,6 @@ body::after {
     cursor: grabbing;
 }
 
-/* ── LEAF FACES (front and back of the paper) ── */
 .leaf-face {
     position: absolute;
     inset: 0;
@@ -182,30 +171,27 @@ body::after {
     background: var(--paper);
     border-radius: 2px 5px 5px 2px;
     border: 1px solid #c8b9a2;
-    background-image: repeating-linear-gradient(0deg, transparent, transparent 27px,
-            rgba(170, 158, 140, 0.12) 27px, rgba(170, 158, 140, 0.12) 28px);
+    background-image: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 27px,
+            rgba(170, 158, 140, 0.12) 27px,
+            rgba(170, 158, 140, 0.12) 28px);
     overflow: hidden;
     box-shadow:
         inset -4px 0 10px rgba(0, 0, 0, 0.04),
         2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* The front face holds the content */
 .front-face {
     transform: rotateY(0deg);
 }
 
-/* The back face is empty but styled to look like the reverse of the page */
 .back-face {
     transform: rotateY(180deg);
     background: var(--paper);
-    /* slight shading to look like the back */
     box-shadow: inset 4px 0 10px rgba(0, 0, 0, 0.05);
 }
 
-/* ══════════════════════════════
-   SCENE 1: COVER
-══════════════════════════════ */
 .cover-scene {
     display: flex;
     flex-direction: column;
@@ -215,7 +201,6 @@ body::after {
     gap: 0;
 }
 
-/* Vinyl Record */
 .vinyl-ring {
     width: 130px;
     height: 130px;
@@ -280,14 +265,12 @@ body::after {
     border-radius: 50%;
 }
 
-/* Small vinyl for back cover */
 .small-vinyl {
     width: 80px;
     height: 80px;
     margin-bottom: 0;
 }
 
-/* Ransom Note Letters */
 .ransom-block {
     text-align: center;
     margin-bottom: 18px;
@@ -320,7 +303,6 @@ body::after {
     margin-bottom: 24px;
 }
 
-/* Player Bar */
 .player-bar {
     width: 100%;
     display: flex;
@@ -361,7 +343,7 @@ body::after {
     left: 38%;
 }
 
-.tap-me {
+.tap-hint {
     font-family: var(--hand);
     font-size: 0.75rem;
     color: #bbb;
@@ -381,17 +363,183 @@ body::after {
     }
 }
 
-.tap-hint {
-    font-family: var(--hand);
-    font-size: 0.75rem;
-    color: #bbb;
-    letter-spacing: 1px;
-    animation: tapPulse 2s ease-in-out infinite;
+/* ========================================= */
+/* PAGE 2: CLUB SCENE                        */
+/* ========================================= */
+.club-scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: radial-gradient(circle at 50% 30%, #2c1e36, #120914);
+    color: #fff;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* ══════════════════════════════
-   SCENE 2: BUS CRASH
-══════════════════════════════ */
+.neon-sign {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid #ff00ff;
+    border-radius: 12px;
+    padding: 14px 24px;
+    box-shadow: 
+        0 0 10px #ff00ff,
+        inset 0 0 10px #ff00ff;
+    animation: neonFlicker 3s infinite alternate;
+    margin-bottom: 30px;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+
+.neon-text {
+    font-family: var(--marker);
+    font-size: 1.8rem;
+    color: #fff;
+    text-shadow: 0 0 8px #ff00ff, 0 0 15px #ff00ff;
+}
+
+.neon-sub {
+    font-family: var(--hand);
+    font-size: 1.2rem;
+    color: #00ffff;
+    text-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff;
+    transform: rotate(-3deg);
+    margin-top: -5px;
+}
+
+@keyframes neonFlicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 15px #ff00ff, inset 0 0 10px #ff00ff;
+    }
+    20%, 24%, 55% {
+        opacity: 0.5;
+        box-shadow: none;
+    }
+}
+
+.lyrics-block {
+    text-align: center;
+    font-family: var(--hand);
+    color: #ffd700;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    z-index: 2;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.disco-ball {
+    position: absolute;
+    top: -20px;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle at 30% 30%, #fff, #bbb, #555);
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+    animation: discoSpin 10s linear infinite;
+    z-index: 1;
+}
+
+.disco-ball::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(45deg, rgba(255,255,255,0.4) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.4) 75%, transparent 75%, transparent),
+        linear-gradient(-45deg, rgba(255,255,255,0.4) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.4) 75%, transparent 75%, transparent);
+    background-size: 10px 10px;
+    border-radius: 50%;
+}
+
+@keyframes discoSpin {
+    100% { transform: rotate(360deg); }
+}
+
+.club-cats {
+    font-size: 32px;
+    z-index: 2;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+    animation: bounceDance 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes bounceDance {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-10px) scale(1.05); }
+}
+
+/* ========================================= */
+/* PAGE 3: DRIVING SCENE                     */
+/* ========================================= */
+.drive-scene {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.lyrics-drive {
+    padding: 24px 20px;
+    background: var(--paper);
+    font-family: var(--hand);
+    color: #444;
+    line-height: 1.6;
+    text-align: center;
+    border-bottom: 2px dashed #ccc;
+    z-index: 2;
+}
+
+.road-topdown {
+    flex: 1;
+    background: #444;
+    position: relative;
+    overflow: hidden;
+}
+
+.lane-lines {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 6px;
+    height: 200%;
+    background: repeating-linear-gradient(
+        to bottom,
+        #fff 0,
+        #fff 30px,
+        transparent 30px,
+        transparent 60px
+    );
+    transform: translateX(-50%);
+    animation: driveRoad 1.5s linear infinite;
+}
+
+@keyframes driveRoad {
+    0% { transform: translate(-50%, -60px); }
+    100% { transform: translate(-50%, 0); }
+}
+
+.drive-car {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    font-size: 40px;
+    transform: translateX(-50%);
+    transition: transform 0.1s ease-out;
+    filter: drop-shadow(0 4px 5px rgba(0,0,0,0.4));
+    z-index: 3;
+}
+
+.steering-area {
+    padding: 12px 16px 16px;
+    background: #e6e0d5;
+    border-top: 3px solid #b8b0a1;
+}
+
+/* ========================================= */
+/* PAGE 4: BUS SCENE                         */
+/* ========================================= */
 .bus-scene {
     display: flex;
     flex-direction: column;
@@ -455,7 +603,6 @@ body::after {
     pointer-events: none;
 }
 
-/* Road zone */
 .road-zone {
     flex: 1;
     position: relative;
@@ -490,7 +637,6 @@ body::after {
     transform: translateY(-50%);
 }
 
-/* Traffic light */
 .traffic-light {
     position: absolute;
     right: 20px;
@@ -537,7 +683,6 @@ body::after {
     background: #636e72;
 }
 
-/* Bus bottom */
 .bus-bottom {
     padding: 8px 16px 14px;
     background: var(--paper2);
@@ -561,7 +706,6 @@ body::after {
     letter-spacing: 1px;
 }
 
-/* Pull tab track */
 .tab-track {
     width: 100%;
     height: 48px;
@@ -603,9 +747,6 @@ body::after {
     font-family: monospace;
 }
 
-/* ══════════════════════════════
-   SCENE 3: CEMETERY
-══════════════════════════════ */
 .cemetery-scene {
     display: flex;
     height: 100%;
@@ -689,7 +830,6 @@ body::after {
     z-index: 2;
 }
 
-/* Rising cats */
 .rising-cats {
     position: absolute;
     left: 50%;
@@ -702,7 +842,6 @@ body::after {
     white-space: nowrap;
 }
 
-/* Heaven column */
 .heaven-col {
     flex: 1;
     height: 100%;
@@ -744,7 +883,6 @@ body::after {
     letter-spacing: 5px;
 }
 
-/* Cat pull tab (vertical) */
 .cat-tab-area {
     position: absolute;
     bottom: 12px;
@@ -795,9 +933,300 @@ body::after {
     cursor: grabbing;
 }
 
-/* ══════════════════════════════
-   SCENE 4: BACK COVER
-══════════════════════════════ */
+/* ========================================= */
+/* PAGE 6: TRUCK SCENE                       */
+/* ========================================= */
+.truck-scene {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.truck-box {
+    background: #0984e3;
+    color: #fff;
+    padding: 16px;
+    font-family: var(--hand);
+    font-size: 1rem;
+    line-height: 1.5;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+    margin: 16px 16px 0;
+    text-align: right;
+}
+
+.truck-box strong {
+    font-family: var(--marker);
+    font-size: 1.3rem;
+}
+
+.truck-road {
+    margin: auto 0 0;
+    height: 120px;
+}
+
+.truck-emoji {
+    position: absolute;
+    bottom: 30px;
+    right: 14px;
+    font-size: 50px;
+    z-index: 3;
+    filter: drop-shadow(-2px 2px 0 rgba(0, 0, 0, 0.3));
+    transform: scaleX(-1);
+}
+
+.truck-crash {
+    position: absolute;
+    top: 55%;
+    left: 20px;
+    font-size: 60px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 4;
+}
+
+.truck-crash.show {
+    opacity: 1;
+    transform: scale(1) rotate(-15deg);
+}
+
+.truck-bottom {
+    background: #dfe6e9;
+    border-top: 2px solid #b2bec3;
+}
+
+/* ========================================= */
+/* PAGE 7: PRIVILEGE SCENE                   */
+/* ========================================= */
+.privilege-scene {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: radial-gradient(circle at center, #f5ead8, #e8ddd0, #c8b9a2);
+    padding: 20px;
+}
+
+.royal-frame {
+    border: 8px solid #d4af37;
+    border-radius: 10px;
+    padding: 24px 16px;
+    background: #fff;
+    box-shadow: 
+        0 10px 20px rgba(0,0,0,0.2), 
+        inset 0 0 15px rgba(212, 175, 55, 0.3);
+    text-align: center;
+    position: relative;
+    width: 100%;
+}
+
+.royal-frame::before {
+    content: '';
+    position: absolute;
+    inset: -14px;
+    border: 2px solid #b89930;
+    border-radius: 16px;
+    pointer-events: none;
+}
+
+.royal-text {
+    font-family: var(--hand);
+    font-size: 1.05rem;
+    color: #4a3b1e;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.royal-cats {
+    font-size: 40px;
+    position: relative;
+    display: inline-block;
+}
+
+.crown {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-10deg);
+    font-size: 24px;
+    color: #f1c40f;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+}
+
+/* ========================================= */
+/* PAGE 8: UNDERPASS SCENE                   */
+/* ========================================= */
+.underpass-scene {
+    height: 100%;
+    background: #222;
+    position: relative;
+    overflow: hidden;
+    cursor: crosshair;
+}
+
+.underpass-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    font-family: var(--hand);
+    font-size: 1.1rem;
+    color: #fff;
+    line-height: 1.8;
+    text-align: center;
+    text-shadow: 0 0 5px rgba(255,255,255,0.4);
+    z-index: 1;
+}
+
+.dark-overlay {
+    position: absolute;
+    inset: 0;
+    background: #050505;
+    z-index: 2;
+    pointer-events: none;
+    transition: clip-path 0.1s linear;
+    /* Default: totally dark */
+    clip-path: circle(0px at 50% 50%);
+}
+
+.light-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    pointer-events: none;
+    color: rgba(255,255,255,0.6);
+}
+
+/* ========================================= */
+/* PAGE 9: LIGHT SCENE                       */
+/* ========================================= */
+.light-scene {
+    height: 100%;
+    background: #111; /* dark until pulled */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.light-scene.illuminated {
+    background: #fdf6e3;
+    animation: lightFlicker 0.3s forwards;
+}
+
+@keyframes lightFlicker {
+    0% { background: #111; }
+    50% { background: #fff; }
+    70% { background: #444; }
+    100% { background: #fdf6e3; }
+}
+
+.ceiling-wire {
+    width: 4px;
+    height: 15%;
+    background: #333;
+}
+
+.light-bulb {
+    font-size: 50px;
+    line-height: 1;
+    filter: grayscale(1) brightness(0.5);
+    transform: rotate(180deg);
+    transition: all 0.4s ease;
+    z-index: 2;
+}
+
+.light-scene.illuminated .light-bulb {
+    filter: grayscale(0) brightness(1.2) drop-shadow(0 0 30px #f1c40f) drop-shadow(0 0 60px #f39c12);
+}
+
+.light-cord-area {
+    position: absolute;
+    top: calc(15% + 40px);
+    right: 40px;
+    height: 120px;
+    width: 60px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.light-track {
+    width: 4px;
+    background: transparent;
+    border: none;
+    height: 100%;
+}
+
+.cord-tab {
+    width: 14px;
+    height: 24px;
+    background: #c0392b;
+    border: 2px solid #2c3e50;
+    border-radius: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: auto;
+    top: 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+}
+
+.light-scene.illuminated .cord-tab {
+    top: 50px;
+}
+
+.text-dark {
+    color: #666;
+    margin-bottom: 8px;
+}
+.light-scene.illuminated .text-dark {
+    opacity: 0;
+}
+
+.light-text {
+    margin-top: auto;
+    font-family: var(--hand);
+    font-size: 1.4rem;
+    color: #111;
+    text-align: center;
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.2s;
+    z-index: 2;
+}
+
+.glow-word {
+    font-family: var(--marker);
+    color: #f39c12;
+}
+
+.light-scene.illuminated .light-text {
+    opacity: 1;
+}
+
+.silhouette-cats {
+    font-size: 45px;
+    filter: brightness(0); /* Pure black silhouette */
+    margin: 20px 0 40px;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.4s, filter 1s ease 1s;
+    z-index: 2;
+}
+
+.light-scene.illuminated .silhouette-cats {
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 4px 8px rgba(0,0,0,0.3)); /* reveals cats after a delay implicitly */
+}
+
+/* ========================================= */
+/* PAGE 10: BACK SCENE                       */
+/* ========================================= */
 .back-scene {
     display: flex;
     flex-direction: column;
@@ -808,11 +1237,6 @@ body::after {
     background: linear-gradient(180deg, var(--paper) 0%, var(--paper2) 100%);
 }
 
-.back-vinyl {
-    display: flex;
-    justify-content: center;
-}
-
 .end-block {
     margin-bottom: 0;
 }
@@ -821,37 +1245,24 @@ body::after {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     margin-top: 8px;
 }
 
 .scan-code {
     display: flex;
-    align-items: flex-end;
-    gap: 2px;
-    height: 28px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
-.sb {
-    width: 3px;
-    background: #333;
-    border-radius: 1px;
-}
-
-.sb.h1 {
-    height: 22px;
-}
-
-.sb.h2 {
-    height: 14px;
-}
-
-.sb.h3 {
-    height: 8px;
-}
-
-.sg {
-    width: 5px;
+.scan-code img {
+    display: block;
+    width: 180px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 6px;
 }
 
 .spotify-icon {
@@ -877,7 +1288,6 @@ body::after {
     color: #333;
 }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 380px) {
     :root {
         --w: 280px;
@@ -891,11 +1301,19 @@ body::after {
     .crash-bubble {
         font-size: 1.1rem;
     }
+
+    .scan-code img {
+        width: 150px;
+    }
 }
 
 @media (min-width: 700px) {
     :root {
         --w: 340px;
         --h: 480px;
+    }
+
+    .scan-code img {
+        width: 190px;
     }
 }
