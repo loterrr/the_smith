@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Gloria+Hallelujah&family=Permanent+Marker&family=Caveat:wght@700&display=swap');
 
-/* ── ROOT ── */
 :root {
     --w: 310px;
     --h: 440px;
@@ -30,7 +29,6 @@ body {
     position: relative;
 }
 
-/* Wood grain */
 body::before {
     content: '';
     position: fixed;
@@ -41,7 +39,6 @@ body::before {
     pointer-events: none;
 }
 
-/* Warm light */
 body::after {
     content: '';
     position: fixed;
@@ -54,7 +51,6 @@ body::after {
     pointer-events: none;
 }
 
-/* ── MUSIC BUTTON ── */
 .music-btn {
     position: fixed;
     bottom: 20px;
@@ -85,7 +81,6 @@ body::after {
     opacity: 0.5;
 }
 
-/* ── PAGE COUNTER ── */
 .page-counter {
     position: fixed;
     top: 20px;
@@ -98,7 +93,6 @@ body::after {
     letter-spacing: 2px;
 }
 
-/* ── NAV ARROWS ── */
 .nav-btn {
     position: fixed;
     top: 50%;
@@ -134,7 +128,6 @@ body::after {
     right: 20px;
 }
 
-/* ── BOOK WRAP & 3D SETUP ── */
 .book-wrap {
     width: var(--w);
     height: var(--h);
@@ -142,7 +135,6 @@ body::after {
     perspective: 1500px;
 }
 
-/* Spine accent line */
 .book-wrap::before {
     content: '';
     position: absolute;
@@ -155,7 +147,6 @@ body::after {
     pointer-events: none;
 }
 
-/* ── LEAF (the actual paper sheet) ── */
 .leaf {
     position: absolute;
     top: 0;
@@ -165,7 +156,6 @@ body::after {
     transform-origin: left center;
     transform-style: preserve-3d;
     cursor: grab;
-    /* initial state */
     transform: rotateY(0deg);
 }
 
@@ -173,7 +163,6 @@ body::after {
     cursor: grabbing;
 }
 
-/* ── LEAF FACES (front and back of the paper) ── */
 .leaf-face {
     position: absolute;
     inset: 0;
@@ -182,30 +171,29 @@ body::after {
     background: var(--paper);
     border-radius: 2px 5px 5px 2px;
     border: 1px solid #c8b9a2;
-    background-image: repeating-linear-gradient(0deg, transparent, transparent 27px,
-            rgba(170, 158, 140, 0.12) 27px, rgba(170, 158, 140, 0.12) 28px);
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 27px,
+        rgba(170, 158, 140, 0.12) 27px,
+        rgba(170, 158, 140, 0.12) 28px
+    );
     overflow: hidden;
     box-shadow:
         inset -4px 0 10px rgba(0, 0, 0, 0.04),
         2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* The front face holds the content */
 .front-face {
     transform: rotateY(0deg);
 }
 
-/* The back face is empty but styled to look like the reverse of the page */
 .back-face {
     transform: rotateY(180deg);
     background: var(--paper);
-    /* slight shading to look like the back */
     box-shadow: inset 4px 0 10px rgba(0, 0, 0, 0.05);
 }
 
-/* ══════════════════════════════
-   SCENE 1: COVER
-══════════════════════════════ */
 .cover-scene {
     display: flex;
     flex-direction: column;
@@ -215,16 +203,17 @@ body::after {
     gap: 0;
 }
 
-/* Vinyl Record */
 .vinyl-ring {
     width: 130px;
     height: 130px;
     border-radius: 50%;
-    background: conic-gradient(from 0deg,
-            #111 0deg, #1e1e1e 15deg, #111 30deg, #1a1a1a 45deg,
-            #222 60deg, #111 90deg, #1e1e1e 120deg, #111 150deg,
-            #222 180deg, #111 210deg, #1e1e1e 240deg, #111 270deg,
-            #222 300deg, #111 330deg, #1e1e1e 360deg);
+    background: conic-gradient(
+        from 0deg,
+        #111 0deg, #1e1e1e 15deg, #111 30deg, #1a1a1a 45deg,
+        #222 60deg, #111 90deg, #1e1e1e 120deg, #111 150deg,
+        #222 180deg, #111 210deg, #1e1e1e 240deg, #111 270deg,
+        #222 300deg, #111 330deg, #1e1e1e 360deg
+    );
     display: flex;
     align-items: center;
     justify-content: center;
@@ -280,14 +269,12 @@ body::after {
     border-radius: 50%;
 }
 
-/* Small vinyl for back cover */
 .small-vinyl {
     width: 80px;
     height: 80px;
     margin-bottom: 0;
 }
 
-/* Ransom Note Letters */
 .ransom-block {
     text-align: center;
     margin-bottom: 18px;
@@ -320,7 +307,6 @@ body::after {
     margin-bottom: 24px;
 }
 
-/* Player Bar */
 .player-bar {
     width: 100%;
     display: flex;
@@ -361,26 +347,6 @@ body::after {
     left: 38%;
 }
 
-.tap-me {
-    font-family: var(--hand);
-    font-size: 0.75rem;
-    color: #bbb;
-    letter-spacing: 1px;
-    animation: tapPulse 2s ease-in-out infinite;
-}
-
-@keyframes tapPulse {
-
-    0%,
-    100% {
-        opacity: 0.4;
-    }
-
-    50% {
-        opacity: 0.9;
-    }
-}
-
 .tap-hint {
     font-family: var(--hand);
     font-size: 0.75rem;
@@ -389,9 +355,15 @@ body::after {
     animation: tapPulse 2s ease-in-out infinite;
 }
 
-/* ══════════════════════════════
-   SCENE 2: BUS CRASH
-══════════════════════════════ */
+@keyframes tapPulse {
+    0%, 100% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 0.9;
+    }
+}
+
 .bus-scene {
     display: flex;
     flex-direction: column;
@@ -455,7 +427,6 @@ body::after {
     pointer-events: none;
 }
 
-/* Road zone */
 .road-zone {
     flex: 1;
     position: relative;
@@ -490,7 +461,6 @@ body::after {
     transform: translateY(-50%);
 }
 
-/* Traffic light */
 .traffic-light {
     position: absolute;
     right: 20px;
@@ -537,7 +507,6 @@ body::after {
     background: #636e72;
 }
 
-/* Bus bottom */
 .bus-bottom {
     padding: 8px 16px 14px;
     background: var(--paper2);
@@ -561,7 +530,6 @@ body::after {
     letter-spacing: 1px;
 }
 
-/* Pull tab track */
 .tab-track {
     width: 100%;
     height: 48px;
@@ -603,9 +571,6 @@ body::after {
     font-family: monospace;
 }
 
-/* ══════════════════════════════
-   SCENE 3: CEMETERY
-══════════════════════════════ */
 .cemetery-scene {
     display: flex;
     height: 100%;
@@ -689,7 +654,6 @@ body::after {
     z-index: 2;
 }
 
-/* Rising cats */
 .rising-cats {
     position: absolute;
     left: 50%;
@@ -702,7 +666,6 @@ body::after {
     white-space: nowrap;
 }
 
-/* Heaven column */
 .heaven-col {
     flex: 1;
     height: 100%;
@@ -744,7 +707,6 @@ body::after {
     letter-spacing: 5px;
 }
 
-/* Cat pull tab (vertical) */
 .cat-tab-area {
     position: absolute;
     bottom: 12px;
@@ -795,9 +757,6 @@ body::after {
     cursor: grabbing;
 }
 
-/* ══════════════════════════════
-   SCENE 4: BACK COVER
-══════════════════════════════ */
 .back-scene {
     display: flex;
     flex-direction: column;
@@ -808,11 +767,6 @@ body::after {
     background: linear-gradient(180deg, var(--paper) 0%, var(--paper2) 100%);
 }
 
-.back-vinyl {
-    display: flex;
-    justify-content: center;
-}
-
 .end-block {
     margin-bottom: 0;
 }
@@ -821,37 +775,24 @@ body::after {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     margin-top: 8px;
 }
 
 .scan-code {
     display: flex;
-    align-items: flex-end;
-    gap: 2px;
-    height: 28px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
-.sb {
-    width: 3px;
-    background: #333;
-    border-radius: 1px;
-}
-
-.sb.h1 {
-    height: 22px;
-}
-
-.sb.h2 {
-    height: 14px;
-}
-
-.sb.h3 {
-    height: 8px;
-}
-
-.sg {
-    width: 5px;
+.scan-code img {
+    display: block;
+    width: 180px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 6px;
 }
 
 .spotify-icon {
@@ -877,7 +818,6 @@ body::after {
     color: #333;
 }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 380px) {
     :root {
         --w: 280px;
@@ -891,11 +831,19 @@ body::after {
     .crash-bubble {
         font-size: 1.1rem;
     }
+
+    .scan-code img {
+        width: 150px;
+    }
 }
 
 @media (min-width: 700px) {
     :root {
         --w: 340px;
         --h: 480px;
+    }
+
+    .scan-code img {
+        width: 190px;
     }
 }
